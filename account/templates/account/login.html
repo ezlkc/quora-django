@@ -1,0 +1,42 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+Giriş Yap
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="column is-6 is-offset-3">
+    <h1 class="title">Giriş Yap</h1>
+    {% if form.errors %}
+        <article class="message is-danger">
+            <div class="message-header">
+                <p><strong>Hata!!</strong>!</p>
+            </div>
+            <div class="message-body">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        </article>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <label class="label">{{ field.label }}</label>
+            {{ field }}
+        {% endfor %}<br /><br />
+        <button class="button is-success">Giriş Yap</button>
+    </form>
+</div>
+</div>
+{% endblock %}

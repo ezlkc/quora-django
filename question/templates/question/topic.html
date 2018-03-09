@@ -1,0 +1,68 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+{{ topic.title }} | Quora
+{% endblock %}
+
+{% block content %}
+<div class="container">
+{% csrf_token %}
+    <div class="column is-8">
+        <input type="hidden" id="follow-url" value="{% url 'question:follow' %}">
+        <h1 class="title">{{ topic.title }}</h1>
+        <img src="{{ topic.image.url }}" class="is-5 column" style="padding: 0"><br />
+        <label class="label is-medium">{{ count }} Soru  Soruldu</label>
+        {% if request.user.is_authenticated %}
+            <a class="button is-primary" id="follow" data-follow="{{ topic.id }}">{{ following }}</a>
+        {% endif %}
+    </div>
+<div class="column is-8">
+    {% for question in questions %}
+        <div class="question is-12 column" style="padding: 0">
+            <i><a>{{ question.profile.user.username }}</a> bunu sordu</i>
+            <label class="label is-large">  <font size="4"><a href="{% url 'question:question' id=question.id %}">{{ question.content }}</a></font></label>
+
+        </div>
+        <br />
+    {% endfor %}
+</div>
+<div class="columns">
+    <div class="column is-8">
+        {% if questions.has_other_pages %}
+  <ul class="pagination">
+    {% if questions.has_previous %}
+      <li><a href="{% url 'question:index' page=questions.previous_page_number %}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in questions.paginator.page_range %}
+      {% if questions.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only"></span></span></li>
+      {% else %}
+        <li><a href="{% url 'question:index' page=i %}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if questions.has_next %}
+      <li><a href="{% url 'question:index' page=questions.next_page_number %}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+    </div>
+</div>
+</div>
+<script>
+    $("#follow").click(function() {
+       var csrf = $("[name=csrfmiddlewaretoken]").val();
+       var id = $(this).attr('data-follow');
+       $.ajax({
+           url: $("#follow-url").val(),
+           data: {csrfmiddlewaretoken: csrf, id: id},
+           method: 'post'
+       }).done(function(data) {
+           $("#follow").text(data);
+       });
+    });
+</script>
+{% endblock %}

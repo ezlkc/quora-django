@@ -1,0 +1,21 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+Profili Düzenle | Quora
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="column is-6 is-offset-3">
+        <h1 class="title">Profili Düzenle</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <label class="label">{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}<br /><br />
+            <button class="button is-primary">Kayıt Et</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

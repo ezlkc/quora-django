@@ -1,0 +1,88 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+{{ answer.content }} | Quora
+{% endblock %}
+
+<!--kenar çizgisi -->
+{% block content %}
+    <style>
+        .q, .answer {
+            border-left: 4px #930415 solid;
+        }
+    </style>
+<div class="container">
+<div class="columns">
+    <div class="column is-8 q">
+      <label><i><a href="{% url 'account:profile' username=answer.profile.user.username page=1 %}">
+          {{ answer.profile.user.username }}</a> bunu sordu</i>&emsp;
+        <i> {{ answer.created_at }} &emsp;</i>
+        <h1 class="title">{{ answer.content }}</h1>
+
+
+        </label>
+        {% if answer.picture %}<br /><br />
+            <img src="{{ answer.picture.url }}" class="is-7 column" style="padding: 0">
+        {% endif %}
+        <br /><br />
+    <label>
+         {% if request.user.is_authenticated %}
+            <a class="button is-primary" href="{% url 'question:comment' id=answer.id %}">yoruma yorum yap</a>
+        {% endif %}
+         &emsp;<a href="{% url 'question:alike' id=answer.id %}">Beğen:{{ answer.a_like }} &emsp;</a>
+          <a href="{% url 'question:adislike' id=answer.id %}">Beğenme:{{ answer.a_dislike }}&emsp;</a>
+
+          <a href="{% url 'question:adelete' id=answer.id page=1 %}"> sil&emsp; </a>
+
+          <a  href="{% url 'question:aedit' answer.id %}">cevabı düzenle</a>
+
+
+   </label>
+
+    </div>
+</div>
+<div class="columns"><br />
+    <div class="column is-8" style="padding: 0"><br /><br />
+    {% if comments %}
+    <h1 class="title">Yoruma Yapılan Yorumlar</h1>
+    {% else %}
+    <h1 class="title">Henüz Yoruma Yorum Yapılmamış</h1>
+    {% endif %}
+        {% for comment in comments %}
+            <div class="column is-12 answer">
+             <font size="3" >  <i>   <a href="{% url 'account:profile' username=comment.profile.user.username page=1 %}">{{ comment.profile.user.username }} bunu sordu</a></i>&emsp;
+              <i> {{ comment.created_at }} </i> </font>
+                <p>{{ comment.content }}</p>
+                {% if comment.picture %}
+                    <br/> <br/>
+                    <img src="{{ comment.picture.url }}" class="is-7 column" style="padding:0">
+                {% endif %}
+               {% if request.user.is_authenticated %}
+                   <a class="button is-primary" href="{% url 'question:comment' id=answer.id %}">yoruma yorum yap</a>&emsp;
+               {% endif %}
+
+            <a href="{% url 'question:cdelete' id=comment.id page=1 %}"> sil&emsp; </a>
+            <a  href="{% url 'question:cedit' comment.id %}">cevabı düzenle</a>
+            
+            <div style="margin-right:100px;">
+                {% for comment in comment2s %}
+            <div class="column is-12 answer">
+             <font size="3" >  <i>   <a href="{% url 'account:profile' username=comment.profile.user.username page=1 %}">{{ comment.profile.user.username }} bunu sordu</a></i>&emsp;
+              <i> {{ comment.created_at }} </i> </font>
+                <p>{{ comment.content }}</p>
+                {% if comment.picture %}
+                    <br/> <br/>
+                    <img src="{{ comment2.picture.url }}" class="is-7 column" style="padding:0">
+                {% endif %}
+
+            </div>
+
+            </div>
+             {% endfor %}
+            <br /><br />
+        {% endfor %}
+    </div>
+</div>
+
+</div>
+{% endblock %}

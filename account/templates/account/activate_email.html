@@ -1,0 +1,6 @@
+{% autoescape off %}
+Selam {{ user.username }},
+Kayıt işleminizi onaylamak için lütfen bağlantıyı tıklayın,
+
+http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
+{% endautoescape %}

@@ -1,0 +1,76 @@
+
+{% extends 'account/base.html' %}
+
+{% block title %}
+    Anasayfa
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="columns">
+    <div class="column is-2 is-offset-2">
+        <label class="label is-medium"><a href="{% url 'question:topics' page=1 %}">Takip Ettiğin Topicler</a></label>
+            {% if not following %}
+                <a>En az bir konuyu takip et</a>
+            {% endif %}
+            {% for topic in following %}
+                <li><a href="{% url 'question:topic' id=topic.id %}">{{ topic.title }}</a></li>
+            {% endfor %}
+    </div>
+<div class="column is-6">
+    <label class="label is-medium">Takip Ettiğin Topiclere Göre Son Sorulmuş Sorular</label>
+
+    <a class="button is-primary" href="{% url 'question:ask' %}">Bir Soru Sor</a>
+    {% if not questions %}
+        <br /><br />
+        <label class="label is-large">Özet akışında herhangi bir sorunuz yok.<a href="{% url 'question:topics' page=1 %}">Herhangi bir konuyu takip edebilirsin</a></label>
+    {% endif %}
+    <br /><br />
+    {% if questions %}
+    {% for question in questions %}
+        <div class="question is-12 column" style="padding: 0">
+         <font size="2">
+           <i>Soru Eklendi: <a href="{% url 'question:topic' id=question.topic.id page=1 %}">{{ question.topic.title }} &emsp;</a></i>
+          <i> {{ question.created_at }}</i></font>
+          <label class="label is-large">  <font size="4"><a href="{% url 'question:question' id=question.id %}">{{ question.content }}</a></font></label>
+
+
+              <i>Views: {{ question.views }} &emsp;</i>
+             {% if request.user.is_authenticated %}
+                <a class="button is-primary" style="width:120; height:25" href="{% url 'question:answer' id=question.id %}">Yorum yap</a>
+                {% endif %}
+        <br />
+
+            </div>
+          <br />
+            {% endfor %}
+              {% endif %}
+</div>
+</div>
+<div class="columns">
+<div class="column is-4 is-offset-4">
+{% if questions.has_other_pages %}
+  <ul class="pagination">
+    {% if questions.has_previous %}
+      <li><a href="{% url 'question:index' page=questions.previous_page_number %}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in questions.paginator.page_range %}
+      {% if questions.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only"></span></span></li>
+      {% else %}
+        <li><a href="{% url 'question:index' page=i %}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if questions.has_next %}
+      <li><a href="{% url 'question:index' page=questions.next_page_number %}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+</div>
+</div>
+{% endblock %}

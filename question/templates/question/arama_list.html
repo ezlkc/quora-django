@@ -1,0 +1,63 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+Search | Quora
+{% endblock %}
+
+{% load widget_tweaks %}
+{% block content %}
+    <style>
+
+.form-control {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    width: 100%;
+}
+    </style>
+  <form method="get">{% csrf_token %}
+    <div class="columns">
+        <h2 style="margin-top:8px"><b>Arama Yap</b></h2>&emsp;
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {% render_field filter.form.content class="form-control" placeholder="Search"  %}
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Sonuçlar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for field in filter.qs %}
+        <tr>
+        <td> {{ field.content }} </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">Bir sonuc bulunamadı</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+
+
+

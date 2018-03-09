@@ -1,0 +1,94 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+{{ profile.user.username }} | Quora
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="column is-10 is-offset-1" style="">
+        <div class="columns">
+            <div class="column is-3 avatar" style="padding: 0">
+                {% if not profile.avatar %}
+                    <img src="https://innmind.com/no_avatar.svg" class="is-12 column" style="padding: 0">
+                {% else %}
+                    <img src="{{ profile.avatar.url }}" class="is-12 column" style="padding: 0">
+                {% endif %}
+            </div>
+            <div class="column is-7">
+                <h1 class="title">{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+                {% if profile.employment %}
+                    <label class="label is-medium">İşi: {{ profile.employment }}</label>
+                {% else %}
+                    <label class="label is-medium">işsiz</label>
+                {% endif %}
+                {% if profile.profession %}
+                    <label class="label is-medium">Meslek: {{ profile.profession }}</label>
+                {% else %}
+                    <label class="label is-medium">Meslek yok</label>
+                {% endif %}
+                {% if profile.education %}
+                    <label class="label is-medium">Okudu: {{ profile.education }}</label>
+                {% else %}
+                    <label class="label is-medium">Eğitim yok</label>
+                {% endif %}
+                {% if profile.user.id == request.user.id %}
+                    <a class="button is-default" href="{% url 'account:edit' %}">profili düzenle</a>
+                {% endif %}
+              {% if profile.user.id != request.user.id %}
+
+                 {% endif %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column is-3"><br /><br />
+                <aside class="menu">
+                  <p class="menu-label">
+                    {{ profile.user.username }}
+                  </p>
+                  <ul class="menu-list">
+                      <li><a href="{% url 'account:profile' page=1 username=profile.user.username %}">Sordukları</a></li>
+                      <li><a href="{% url 'account:answers' page=1 username=profile.user.username %}">Sorulara Verdiğin Cevaplar</a></li>
+                       <li><a href="{% url 'account:commnets' page=1 username=profile.user.username %}">Yorumlara Verdiğin Cevaplar</a></li>
+                  </ul>
+                </aside>
+            </div>
+            <div class="column is-8"><br />
+                {% if not answers %}
+                    <h2 class="title">Henuz Bir Cevap Oluşturulmamış</h2>
+                {% endif %}
+                {% for answer in answers %}
+                    <div class="question is-12 column" style="padding: 0">
+                        <label class="label is-large">{{ answer.content }}</label>
+                        <i><a>{{ answer.question.profile.user.username }}</a> bunu sordu</i>
+                    </div>
+                    <br />
+                {% endfor %}
+                {% if answers.has_other_pages %}
+                  <ul class="pagination">
+                    {% if answers.has_previous %}
+                      <li><a href="{% url 'account:answers' username=profile.user.username page=answers.previous_page_number %}">&laquo;</a></li>
+                    {% else %}
+                      <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in answers.paginator.page_range %}
+                      {% if answers.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only"></span></span></li>
+                      {% else %}
+                        <li><a href="{% url 'account:answers' username=profile.user.username page=i %}">{{ i }}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if answers.has_next %}
+                      <li><a href="{% url 'account:answers' username=profile.user.username page=answers.next_page_number %}">&raquo;</a></li>
+                    {% else %}
+                      <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+Ask | Quora
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="columns">
+    <div class="is-offset-3 is-6 column">
+        <form method="post" enctype="multipart/form-data">
+        <h2 class="title">Bir Soru Olusturun</h2>
+        {% if form.errors %}
+        <article class="message is-danger">
+            <div class="message-header">
+                <p><strong>Hata!!</strong>!</p>
+            </div>
+            <div class="message-body">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+            </div>
+        </article>
+    {% endif %}
+            {% for field in form %}
+                <label class="label">{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+        {% csrf_token %}
+        <br /><br />
+        <label class="label">Topic</label>
+        <div class="select">
+            <select name="topic">
+                {% for topic in topics %}
+                    <option value="{{ topic.id }}">{{ topic.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br />
+        <br />
+        <button class="button is-primary">Gönder</button>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

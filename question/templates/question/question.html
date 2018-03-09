@@ -1,0 +1,63 @@
+{% extends 'account/base.html' %}
+
+{% block title %}
+{{ question.content }} | Quora
+{% endblock %}
+
+{% block content %}
+    <style>
+        .q, .answer {
+            border-left: 4px #930415 solid;
+        }
+    </style>
+<div class="container">
+<div class="columns">
+    <div class="column is-8 q">
+    <i><a href="{% url 'account:profile' username=question.profile.user.username page=1 %}">
+          {{ question.profile.user.username }}</a> bunu sordu &emsp;</i>
+
+        <i>Soru eklendi: <a href="{% url 'question:topic' id=question.topic.id page=1 %}">
+          {{ question.topic.title }}&emsp;</a></i>
+        <i> {{ question.created_at }}</i><br /><br />
+
+        <h1 class="title">{{ question.content }}</h1>
+
+        {% if question.picture %}
+            <img src="{{ question.picture.url }}" class="is-7 column" style="padding: 0">
+        {% endif %}
+        <br />
+        {% if request.user.is_authenticated %}
+            <a class="button is-primary" href="{% url 'question:answer' id=question.id %}">Yorum Yap</a>
+        {% endif %}
+        <a href="{% url 'question:qlike' id=question.id %}">&emsp;Beğen:{{ question.q_like }}&emsp;</a>
+        <a href="{% url 'question:qdislike' id=question.id %}">Beğenme:{{ question.q_dislike }}&emsp;</a>
+
+        <a href="{% url 'question:delete' id=question.id page=1 %}"> sil&emsp; </a>
+        <a  href="{% url 'question:qedit' question.id %}">soruyu düzenle</a>
+    
+    </div>
+</div>
+<div class="columns"><br />
+    <div class="column is-8" style="padding: 0"><br /><br />
+    {% if answers %}
+    <h1 class="title">Yorumlar</h1>
+    {% else %}
+    <h1 class="title">Henuz Bir Cevap Oluşturulmamış</h1>
+    {% endif %}
+
+        {% for answer in answers %}
+            <div class="column is-12 answer">
+              <font size="3" > <i> <a href="{% url 'account:profile' username=question.profile.user.username page=1 %}">{{ question.profile.user.username }}</a> bunu sordu</i>&emsp;
+              <i> {{ question.created_at }} </i> </font>
+            <label class="label is-large">  <font size="4"><a href="{% url 'question:answer1' id=answer.id %}">{{ answer.content }}</a></font></label>
+
+                {% if answer.picture %}
+                    <br/> <br/>
+                    <img src="{{ answer.picture.url }}" class="is-7 column" style="padding:0">
+                {% endif %}
+            </div><br /><br />
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}
