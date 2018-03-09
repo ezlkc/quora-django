@@ -2,8 +2,8 @@
 * ~$ sudo apt-get install python3.5
 * ~$ sudo apt-get install python3-pip
 * ~$ sudo apt-get install python3-venv
-* ~$ git clone https://kocezel@bitbucket.org/kocezel/quora.git
-* ~$ cd quora/
+* ~$ git clone https://kocezel@bitbucket.org/kocezel/quora-django.git
+* ~$ cd quora-django/
 * ~$ python3 -m venv env
 * ~$ cd env/bin/source activate
 
