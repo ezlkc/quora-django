@@ -1,4 +1,4 @@
-Django==1.11.4
+Django==1.11.29
 django-filter==2.0.0.dev1
 django-widget-tweaks==1.4.1
 image==1.5.17
